@@ -1,13 +1,13 @@
-(define-module (anthony-hello)
+(define-module (anthony-foo)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix build-system gnu)
   #:use-module (guix download))
 
-(define-public anthony-hello
+(define-public foo
   (package
-    (name "anthony-hello")
-    (version "0.1")
+    (name "anthony-foo")
+    (version "2.10")
     (source (origin
               (method url-fetch)
               (uri (string-append "mirror://gnu/hello/hello-" version
@@ -16,7 +16,7 @@
                (base32
                 "0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i"))))
     (build-system gnu-build-system)
-    (synopsis "Hello Anthony, Guix world: An example custom Guix package")
+    (synopsis "Hello, Guix world: An example custom Guix package")
     (description
      "GNU Hello prints the message \"Hello, world!\" and then exits.  It
 serves as an example of standard GNU coding practices.  As such, it supports
