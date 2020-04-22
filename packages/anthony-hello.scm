@@ -1,4 +1,4 @@
-(define-module (anthonyquizon packages anthony-hello)
+(define-module (packages anthony-hello)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix build-system gnu)
