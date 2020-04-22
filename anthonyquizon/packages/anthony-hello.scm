@@ -1,4 +1,4 @@
-(define-module (anthony-hello)
+(define-module (packages anthonyquizon anthony-hello)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix build-system gnu)
@@ -23,4 +23,3 @@ serves as an example of standard GNU coding practices.  As such, it supports
 command-line arguments, multiple languages, and so on.")
     (home-page "https://www.gnu.org/software/hello/")
     (license gpl3+)))
-
