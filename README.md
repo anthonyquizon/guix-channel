@@ -12,6 +12,7 @@ Git clone into dir and add the following to `~/.config/guix/channels.scm`:
 
 ## Testing
 * `guix build -L <GUIX_CHANNEL_PATH> <package>`
+    * eg `build -L . dub`
 * `guix --install-from-file=<file>`
 
 

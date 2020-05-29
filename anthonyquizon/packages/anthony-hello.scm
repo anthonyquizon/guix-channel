@@ -7,7 +7,7 @@
 (define-public anthony-hello
   (package
     (name "anthony-hello")
-    (version "0.1")
+    (version "0.2")
     (source (origin
               (method url-fetch)
               (uri (string-append "mirror://gnu/hello/hello-" version
