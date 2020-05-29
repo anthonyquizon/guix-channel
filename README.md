@@ -15,6 +15,9 @@ Git clone into dir and add the following to `~/.config/guix/channels.scm`:
     * eg `build -L . dub`
 * `guix --install-from-file=<file>`
 
+## Updating channel
+* Make sure to `git commit`. Channels updates are determined by git hash
+
 
 ## Troubleshooting
 ### Missing packages after `guix pull`
