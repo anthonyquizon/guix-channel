@@ -32,6 +32,7 @@
                      [bin (string-append out "/bin")]
                      [lib (string-append out "/lib")]
                      [include (string-append out "/include")]
+                     [config (string-append bin "/dmd.conf")]
                      [source (assoc-ref %build-inputs "source")]
                      [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
                      [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
@@ -40,6 +41,9 @@
                      [extracted-bin (string-append extract-path "/linux/bin64/")]
                      [extracted-lib (string-append extract-path "/linux/lib64/")]
                      [extracted-include (string-append extract-path "/src")]
+
+                     [config-body (string-append "[Environment64]\n"
+                                    "DFLAGS=-I%@P%/../include/phobos -I%@P%/../include/druntime/import -L-L%@P%/../lib -L--export-dynamic -fPIC")]
                      ;; Allow tar to find gzip
                      [xz_path (string-append (assoc-ref %build-inputs "xz") "/bin")])
                         (mkdir-p out)
@@ -53,8 +57,9 @@
                             (invoke mv extracted-bin bin)
                             (invoke mv extracted-lib lib)
                             (invoke mv extracted-include include)
-
-                            )))))
+                            (let ([port (open-file config "w")])
+                                (display config-body port)
+                                (close-port port)))))))
       (synopsis #f)
       (description "precompiled x86_64 version of dmd")
       (license #f)
