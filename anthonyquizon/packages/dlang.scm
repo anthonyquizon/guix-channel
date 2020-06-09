@@ -30,20 +30,31 @@
               (use-modules (guix build utils))
               (let* ([out (assoc-ref %outputs "out")]
                      [bin (string-append out "/bin")]
+                     [lib (string-append out "/lib")]
+                     [include (string-append out "/include")]
                      [source (assoc-ref %build-inputs "source")]
                      [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
                      [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
                      [mv (string-append (assoc-ref %build-inputs "coreutils") "/bin/mv")]
-                     [extracted-dmd "dmd2/linux/bin64/dmd"]
+                     [extract-path "dmd2"]
+                     [extracted-bin (string-append extract-path "/linux/bin64/")]
+                     [extracted-lib (string-append extract-path "/linux/lib64/")]
+                     [extracted-include (string-append extract-path "/src")]
                      ;; Allow tar to find gzip
                      [xz_path (string-append (assoc-ref %build-inputs "xz") "/bin")])
                         (mkdir-p out)
-                        (mkdir-p bin)
+                        ;(mkdir-p bin)
+                        ;(mkdir-p lib)
+                        ;(mkdir-p include)
 
                         (with-directory-excursion out
                             (setenv "PATH" xz_path)
                             (invoke tar "xvf" source)
-                            (invoke mv extracted-dmd bin))))))
+                            (invoke mv extracted-bin bin)
+                            (invoke mv extracted-lib lib)
+                            (invoke mv extracted-include include)
+
+                            )))))
       (synopsis #f)
       (description "precompiled x86_64 version of dmd")
       (license #f)
