@@ -30,6 +30,7 @@
           (begin
               (use-modules (guix build utils))
               (let* ([out (assoc-ref %outputs "out")]
+                     [bin (string-append out "/bin")]
                      [source (assoc-ref %build-inputs "source")]
                      [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
                      [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
@@ -41,7 +42,7 @@
 
                         (with-directory-excursion out
                             (setenv "PATH" gzip_path)
-                            (invoke tar "xvf" source))))))
+                            (invoke tar "xvf" source "--directory" out))))))
       (synopsis #f)
       (description "precompiled x86_64 version of dub")
       (license #f)
