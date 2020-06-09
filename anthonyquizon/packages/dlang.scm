@@ -9,52 +9,49 @@
   #:use-module (gnu packages compression)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
+  #:use-module (guix build-system trivial)
   #:use-module (guix download))
+
+
 
 (define-public dub
     (package
-      (name "dub")
+      (name "zig")
       (version "1.21.0")
-      (source
-        (origin
-          (method git-fetch)
-          (uri (git-reference
-                 (url "https://github.com/dlang/dub.git")
-                 (commit (string-append "v" version))))
-          (file-name (git-file-name name version))
-          (sha256
-            (base32 "1r8iili2bc8d2pwy9jpibjkbzn19kbxkxc07n5zn6smaya2i747f"))))
-      (build-system gnu-build-system)
+      (source (origin
+                (method url-fetch)
+                (uri "https://github.com/dlang/dub/releases/download/v1.21.0/dub-v1.21.0-linux-x86_64.tar.gz")
+                (sha256
+                  (base32
+                    "1pipxf9b0b4cnvbr418azd4npw07x8dbidf1fck4drbgk4c920xi"))))
+      (build-system trivial-build-system)
+      (native-inputs `(("tar" ,tar)
+                       ("xz" ,xz)
+                       ("coreutils" ,coreutils)))
       (arguments
-        `(#:tests? #f ; it would have tested itself by installing some packages (vibe etc)
-          #:phases
-          (modify-phases %standard-phases
-                         (delete 'configure)            ; no configure script
-                         (replace 'build
-                                  (lambda _
-                                    (invoke "./build.sh")))
-                         (replace 'install
-                                  (lambda* (#:key outputs #:allow-other-keys)
-                                           (let* ((out (assoc-ref outputs "out"))
-                                                  (bin (string-append out "/bin")))
-                                             (install-file "bin/dub" bin)
-                                             #t))))))
-      (inputs
-        `(("curl" ,curl)))
+        '(#:modules
+          ((guix build utils))
+          #:builder
+          (begin
+              (use-modules (guix build utils))
+              (let* ([out (assoc-ref %outputs "out")]
+                     [bin (string-append out "/bin")]
+                     [source (assoc-ref %build-inputs "source")]
+                     [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
+                     [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
+                     [mv (string-append (assoc-ref %build-inputs "coreutils") "/bin/mv")]
+                     [extract-path "dub-v1.21.0-linux-x86_64.tar.gz"]
+                     [PATH (string-append (assoc-ref %build-inputs "xz") "/bin")])
+                        (mkdir-p out)
+                        (mkdir-p bin)
 
-      (native-inputs
-        `(("ldc" ,ldc)))
+                        (with-directory-excursion out
+                            (setenv "PATH" PATH)
 
-      (home-page "https://code.dlang.org/getting_started")
-      (synopsis "Package and build manager for D projects")
-      (description
-        "DUB is a package and build manager for applications and
-        libraries written in the D programming language.  It can
-        automatically retrieve a project's dependencies and integrate
-        them in the build process.
-
-        The design emphasis is on maximum simplicity for simple projects,
-        while providing the opportunity to customize things when
-        needed.")
-        (license license:expat)))
+                            (invoke tar "xvf" source)
+                            (invoke mv (string-append extract-path "/dub") bin))))))
+      (synopsis #f)
+      (description #f)
+      (license #f)
+      (home-page #f)))
 
