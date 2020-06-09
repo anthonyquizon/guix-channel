@@ -39,6 +39,7 @@
                      ;; Allow tar to find gzip
                      [gzip_path (string-append (assoc-ref %build-inputs "gzip") "/bin")])
                         (mkdir-p out)
+                        (mkdir-p bin)
 
                         (with-directory-excursion out
                             (setenv "PATH" gzip_path)
