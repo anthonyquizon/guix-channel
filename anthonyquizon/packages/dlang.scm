@@ -42,7 +42,7 @@
 
                         (with-directory-excursion out
                             (setenv "PATH" gzip_path)
-                            (invoke tar "xvf" source "--directory" out))))))
+                            (invoke tar "xvf" source "--directory" bin))))))
       (synopsis #f)
       (description "precompiled x86_64 version of dub")
       (license #f)
