@@ -8,6 +8,47 @@
   #:use-module (guix download))
 
 
+(define-public dmd
+    (package
+      (name "dmd")
+      (version "2.092.0")
+      (source (origin
+                (method url-fetch)
+                (uri "http://downloads.dlang.org/releases/2.x/2.092.0/dmd.2.092.0.linux.tar.xz")
+                (sha256
+                  (base32
+                    "0qklprl44mcwjj1p49166wrl4jml7b52ylyvv8bhh8w38cz6cs1h"))))
+      (build-system trivial-build-system)
+      (native-inputs `(("tar" ,tar)
+                       ("xz" ,xz)
+                       ("coreutils" ,coreutils)))
+      (arguments
+        '(#:modules
+          ((guix build utils))
+          #:builder
+          (begin
+              (use-modules (guix build utils))
+              (let* ([out (assoc-ref %outputs "out")]
+                     [bin (string-append out "/bin")]
+                     [source (assoc-ref %build-inputs "source")]
+                     [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
+                     [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
+                     [mv (string-append (assoc-ref %build-inputs "coreutils") "/bin/mv")]
+                     [extracted-dmd "dmd2/linux/bin64/dmd"]
+                     ;; Allow tar to find gzip
+                     [xz_path (string-append (assoc-ref %build-inputs "xz") "/bin")])
+                        (mkdir-p out)
+                        (mkdir-p bin)
+
+                        (with-directory-excursion out
+                            (setenv "PATH" xz_path)
+                            (invoke tar "xvf" source)
+                            (invoke mv extracted-dmd bin))))))
+      (synopsis #f)
+      (description "precompiled x86_64 version of dmd")
+      (license #f)
+      (home-page #f)))
+
 
 (define-public dub
     (package
@@ -35,7 +76,6 @@
                      [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
                      [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
                      [mv (string-append (assoc-ref %build-inputs "coreutils") "/bin/mv")]
-                     [extract-path "dub-v1.21.0-linux-x86_64"]
                      ;; Allow tar to find gzip
                      [gzip_path (string-append (assoc-ref %build-inputs "gzip") "/bin")])
                         (mkdir-p out)
