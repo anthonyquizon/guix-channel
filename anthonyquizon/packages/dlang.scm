@@ -16,7 +16,7 @@
 
 (define-public dub
     (package
-      (name "zig")
+      (name "dub")
       (version "1.21.0")
       (source (origin
                 (method url-fetch)
@@ -26,9 +26,9 @@
                     "1pipxf9b0b4cnvbr418azd4npw07x8dbidf1fck4drbgk4c920xi"))))
       (build-system trivial-build-system)
       (native-inputs `(("tar" ,tar)
-                       ("xz" ,xz)
-                       ("coreutils" ,coreutils)))
+                       ("gzip" ,gzip)
       (arguments
+        ("coreutils" ,coreutils)))
         '(#:modules
           ((guix build utils))
           #:builder
@@ -40,18 +40,18 @@
                      [tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar")]
                      [ls (string-append (assoc-ref %build-inputs "coreutils") "/bin/ls")]
                      [mv (string-append (assoc-ref %build-inputs "coreutils") "/bin/mv")]
-                     [extract-path "dub-v1.21.0-linux-x86_64.tar.gz"]
-                     [PATH (string-append (assoc-ref %build-inputs "xz") "/bin")])
+                     [extract-path "dub-v1.21.0-linux-x86_64"]
+                     ;; Allow tar to find gzip
+                     [gzip_path (string-append (assoc-ref %build-inputs "gzip") "/bin")])
+
                         (mkdir-p out)
                         (mkdir-p bin)
 
                         (with-directory-excursion out
-                            (setenv "PATH" PATH)
-
-                            (invoke tar "xvf" source)
-                            (invoke mv (string-append extract-path "/dub") bin))))))
+                            (setenv "PATH" gzip_path)
+                            (invoke tar "xvf" source))))))
       (synopsis #f)
-      (description #f)
+      (description "precompiled x86_64 version of dub")
       (license #f)
       (home-page #f)))
 
