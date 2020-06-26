@@ -9,6 +9,10 @@ Git clone into dir and add the following to `~/.config/guix/channels.scm`:
       %default-channels)
 ```
 
+## Repl
+`guix repl -L .`
+eg command:. `,use (anthonyquizon packages base)
+
 
 ## Testing
 * `guix build -L <GUIX_CHANNEL_PATH> <package>`
@@ -20,6 +24,10 @@ Git clone into dir and add the following to `~/.config/guix/channels.scm`:
 
 
 ## Troubleshooting
+### Cannot find package when running `guix build -L . <package>`
+This probably means that the package isnt building properly.
+Check for syntax errors and such
+
 ### Missing packages after `guix pull`
 Try `guix describe -f channels`. It should return something like:
 ```
