@@ -58,3 +58,7 @@ export PATH="$GUIX_PATH:$PATH"
 export INFOPATH="$HOME/.config/guix/current/share/info:$INFOPATH"
 
 ```
+
+### Notes
+* if `guix pull` doesn't work, some of your packages may not be building
+    * are there any outside scm files that are not packages?
